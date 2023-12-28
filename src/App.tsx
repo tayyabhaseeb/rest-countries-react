@@ -1,9 +1,12 @@
-import Header from "./components/Header";
+import Header from "./components/others/Header";
+import { ThemeProvider } from "./components/ui/theme-provider";
 
 function App() {
   return (
     <div>
-      <Header />
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <Header />
+      </ThemeProvider>
     </div>
   );
 }
