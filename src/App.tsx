@@ -30,7 +30,7 @@ function App() {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <Header />
       <div className=" md:flex md:flex-row md:items-center md:justify-between md:p-4">
-        <InputSearch />
+        <InputSearch setData={setData} />
         <SelectDemo />
       </div>
       <div className="md:grid md:grid-cols-4 md:gap-8 md:mx-8 mx-4">
@@ -43,12 +43,3 @@ function App() {
 }
 
 export default App;
-
-{
-  /* <CardComponent />
-        <CardComponent />
-        <CardComponent />
-        <CardComponent />
-        <CardComponent />
-        <CardComponent /> */
-}

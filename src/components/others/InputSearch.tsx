@@ -1,11 +1,29 @@
+import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
+import { dataType } from "@/App";
 
-export default function InputSearch() {
+type ComponentProps = {
+  setData: React.Dispatch<React.SetStateAction<dataType[]>>;
+};
+
+export default function InputSearch({ setData }: ComponentProps) {
+  const [inputValue, setInputValue] = useState<string>("");
+
+  useEffect(() => {
+    if (inputValue !== "") {
+      fetch(`https://restcountries.com/v3.1/name/${inputValue}`)
+        .then((res) => res.json())
+        .then((data) => setData(data));
+    }
+  }, [inputValue, setData]);
+
   return (
     <div className="relative">
       <Input
         type="text"
         placeholder="Search for a country"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
         className="my-4 w-[95%] block mx-auto py-6 pl-12 md:ml-8 md:w-full "
       />
       <svg
