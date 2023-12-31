@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import CardComponent from "./components/others/CardComponent";
-import Header from "./components/others/Header";
-import InputSearch from "./components/others/InputSearch";
-import { SelectDemo } from "./components/others/SelectDemo";
 
 import { ThemeProvider } from "./components/ui/theme-provider";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./components/others/Layout";
+import IntroPage from "./pages/IntroPage";
+import DescPage from "./pages/DescPage";
 
 export type dataType = {
   flags: {
@@ -28,16 +28,17 @@ function App() {
   }, []);
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <Header />
-      <div className=" md:flex md:flex-row md:items-center md:justify-between md:p-4">
-        <InputSearch setData={setData} />
-        <SelectDemo />
-      </div>
-      <div className="md:grid md:grid-cols-4 md:gap-8 md:mx-8 mx-4">
-        {data.map((obj) => (
-          <CardComponent obj={obj} />
-        ))}
-      </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route
+              index
+              element={<IntroPage data={data} setData={setData} />}
+            />
+            <Route path=":country" element={<DescPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }
