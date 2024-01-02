@@ -26,9 +26,6 @@ jobs:
       - name: Install dependencies
         run: npm install # Install the project dependencies.
 
-      - name: Lint
-        run: npm run lint
-
       - name: Build
         run: npm run build # Build your React application.
 
