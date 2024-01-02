@@ -36,3 +36,4 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }} # Your Netlify Auth token, stored as a GitHub secret.
         with:
           args: deploy --dir=build --prod # Commands passed to the Netlify CLI to deploy your site.`
+
