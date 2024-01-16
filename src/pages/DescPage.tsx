@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import { NavLink, useParams } from "react-router-dom";
 
 type DescData = {
@@ -36,10 +37,19 @@ export default function DescPage() {
   const { country } = useParams();
 
   useEffect(() => {
-    fetch(`https://restcountries.com/v3.1/name/${country}?fullText=true`)
-      .then((res) => res.json())
-      .then((data) => setData(data[0]));
-  }, [country]);
+    const fetchData = async () => {
+      try {
+        const res = await fetch(
+          `https://restcountries.com/v3.1/name/${country}?fullText=true`
+        );
+        const data = await res.json();
+        setData(data[0]);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  });
 
   return (
     <div className="mt-8">

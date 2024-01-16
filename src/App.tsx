@@ -1,10 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { ThemeProvider } from "./components/ui/theme-provider";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/others/Layout";
 import IntroPage from "./pages/IntroPage";
 import DescPage from "./pages/DescPage";
+
+import { useDispatch } from "react-redux";
+import {
+  fetchDataStart,
+  fetchDataSuccess,
+  fetchDataFailure,
+} from "./slices/dataSlice";
 
 export type dataType = {
   flags: {
@@ -19,22 +26,28 @@ export type dataType = {
 };
 
 function App() {
-  const [data, setData] = useState<dataType[]>([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    fetch("https://restcountries.com/v3.1/all")
-      .then((res) => res.json())
-      .then((data) => setData(data));
-  }, []);
+    const fetchData = async () => {
+      try {
+        dispatch(fetchDataStart());
+        const res = await fetch("https://restcountries.com/v3.1/all");
+        const data = await res.json();
+        dispatch(fetchDataSuccess(data));
+      } catch (err) {
+        dispatch(fetchDataFailure());
+      }
+    };
+
+    fetchData();
+  }, [dispatch]);
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route
-              index
-              element={<IntroPage data={data} setData={setData} />}
-            />
+            <Route index element={<IntroPage />} />
             <Route path=":country" element={<DescPage />} />
           </Route>
         </Routes>

@@ -1,21 +1,33 @@
 import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
-import { dataType } from "@/App";
+import { useDispatch } from "react-redux";
+import {
+  fetchDataFailure,
+  fetchDataStart,
+  fetchDataSuccess,
+} from "@/slices/dataSlice";
 
-type ComponentProps = {
-  setData: React.Dispatch<React.SetStateAction<dataType[]>>;
-};
-
-export default function InputSearch({ setData }: ComponentProps) {
+export default function InputSearch() {
   const [inputValue, setInputValue] = useState<string>("");
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (inputValue !== "") {
-      fetch(`https://restcountries.com/v3.1/name/${inputValue}`)
-        .then((res) => res.json())
-        .then((data) => setData(data));
-    }
-  }, [inputValue, setData]);
+    const fetchData = async () => {
+      try {
+        dispatch(fetchDataStart());
+        if (inputValue !== "") {
+          const res = await fetch(
+            `https://restcountries.com/v3.1/name/${inputValue}`
+          );
+          const data = await res.json();
+          dispatch(fetchDataSuccess(data));
+        }
+      } catch (err) {
+        dispatch(fetchDataFailure());
+      }
+    };
+    fetchData();
+  }, [dispatch, inputValue]);
 
   return (
     <div className="relative">

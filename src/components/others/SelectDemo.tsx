@@ -1,4 +1,3 @@
-import { dataType } from "@/App";
 import {
   Select,
   SelectContent,
@@ -8,26 +7,38 @@ import {
   SelectValue,
   SelectLabel,
 } from "@/components/ui/select";
+import {
+  fetchDataFailure,
+  fetchDataStart,
+  fetchDataSuccess,
+} from "@/slices/dataSlice";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
-type ComponentProps = {
-  setData: React.Dispatch<React.SetStateAction<dataType[]>>;
-};
-
-export function SelectDemo({ setData }: ComponentProps) {
+export function SelectDemo() {
   const [region, setRegion] = useState<string>("");
-
+  const dispatch = useDispatch();
   function handleChange(value: string) {
     setRegion(value);
   }
 
   useEffect(() => {
-    if (region !== "") {
-      fetch(`https://restcountries.com/v3.1/region/${region}`)
-        .then((res) => res.json())
-        .then((data) => setData(data));
-    }
-  }, [region, setData]);
+    const fetchData = async () => {
+      try {
+        dispatch(fetchDataStart());
+        if (region !== "") {
+          const res = await fetch(
+            `https://restcountries.com/v3.1/region/${region}`
+          );
+          const data = await res.json();
+          dispatch(fetchDataSuccess(data));
+        }
+      } catch (err) {
+        dispatch(fetchDataFailure());
+      }
+    };
+    fetchData();
+  }, [region, dispatch]);
 
   return (
     <Select value={region} onValueChange={handleChange}>
